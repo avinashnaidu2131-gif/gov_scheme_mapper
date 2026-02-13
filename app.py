@@ -36,7 +36,11 @@ if st.button("Find Eligible Schemes"):
 
     if results:
         st.success("Eligible Schemes")
-        for r in results:
-            st.write(f"✅ {r}")
+        for name, status in results:
+
+    if status == "Eligible":
+        st.success(f"{name} — Eligible")
+    else:
+        st.error(f"{name} — Not Eligible")
     else:
         st.warning("No schemes matched")
