@@ -1,0 +1,23 @@
+[
+  {
+    "name": "PM-KISAN",
+    "income_limit": 300000,
+    "occupation": "Farmer",
+    "land_required": true,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Education Scholarship",
+    "income_limit": 200000,
+    "occupation": "Student",
+    "land_required": false,
+    "priority_category": ["SC","ST","OBC"]
+  },
+  {
+    "name": "PM Awas Yojana",
+    "income_limit": 250000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  }
+]
