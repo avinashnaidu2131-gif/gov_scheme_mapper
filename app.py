@@ -4,7 +4,7 @@ from model import find_eligible_schemes
 from utils.helpers import load_schemes
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
-import tempfile
+from io import BytesIO
 
 # ---------------- LOGIN ----------------
 if "logged_in" not in st.session_state:
@@ -55,7 +55,16 @@ category = st.sidebar.selectbox("Category", ["General","OBC","SC","ST"])
 
 district = st.sidebar.selectbox(
     "District",
-    ["Chennai","Coimbatore","Madurai","Salem","Tirunelveli"]
+    [
+        "Ariyalur","Chengalpattu","Chennai","Coimbatore","Cuddalore",
+        "Dharmapuri","Dindigul","Erode","Kallakurichi","Kanchipuram",
+        "Kanniyakumari","Karur","Krishnagiri","Madurai","Mayiladuthurai",
+        "Nagapattinam","Namakkal","Nilgiris","Perambalur","Pudukkottai",
+        "Ramanathapuram","Ranipet","Salem","Sivaganga","Tenkasi",
+        "Thanjavur","Theni","Thiruvallur","Thiruvarur","Thoothukudi",
+        "Tiruchirappalli","Tirunelveli","Tirupathur","Tiruppur",
+        "Tiruvannamalai","Vellore","Viluppuram","Virudhunagar"
+    ]
 )
 
 # ---------------- ELIGIBILITY ----------------
@@ -75,15 +84,13 @@ if st.sidebar.button("Check Eligibility"):
         # Dashboard
         st.header("Analytics Dashboard")
         st.metric("Total Eligible Schemes", len(df))
+        st.bar_chart(df["Category"].value_counts())
 
-        category_count = df["Category"].value_counts()
-        st.bar_chart(category_count)
+        # PDF GENERATE + DOWNLOAD
+        if st.button("Generate PDF Report"):
 
-        # PDF DOWNLOAD
-        if st.button("Download PDF Report"):
-
-            temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
-            doc = SimpleDocTemplate(temp_file.name)
+            buffer = BytesIO()
+            doc = SimpleDocTemplate(buffer)
             elements = []
             styles = getSampleStyleSheet()
 
@@ -95,13 +102,14 @@ if st.sidebar.button("Check Eligibility"):
                 elements.append(Spacer(1, 6))
 
             doc.build(elements)
+            buffer.seek(0)
 
-            with open(temp_file.name, "rb") as f:
-                st.download_button(
-                    "Click to Download",
-                    f,
-                    file_name="eligibility_report.pdf"
-                )
+            st.download_button(
+                label="Download PDF",
+                data=buffer,
+                file_name="eligibility_report.pdf",
+                mime="application/pdf"
+            )
 
     else:
         st.warning("No schemes eligible.")
