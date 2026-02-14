@@ -4,36 +4,32 @@ def find_eligible_schemes(age, income, occupation, land, category, gender, distr
 
     for scheme in schemes:
 
-        score = 0
+        # STRICT occupation match
+        if scheme.get("occupation") != occupation:
+            continue
 
         # Income check
-        if income <= scheme.get("income_limit", 0):
-            score += 1
+        if income > scheme.get("income_limit", 0):
+            continue
 
-        # Occupation check
-        if scheme.get("occupation") == occupation:
-            score += 1
-
-        # Land requirement check
-        if scheme.get("land_required") and land == "Yes":
-            score += 1
+        # Land check
+        if scheme.get("land_required") and land != "Yes":
+            continue
 
         # Category check
-        if category in scheme.get("priority_category", []):
-            score += 1
+        if category not in scheme.get("priority_category", []):
+            continue
 
-        # District check (SAFE VERSION)
+        # District check
         scheme_districts = scheme.get("districts", "All")
-
         if scheme_districts != "All":
             if isinstance(scheme_districts, list):
                 if district not in scheme_districts:
                     continue
 
-        # Add if eligible
-        if score >= 2:
-            eligible_schemes.append(
-                (scheme["name"], scheme.get("scheme_category", "General"))
-            )
+        # If all conditions passed → eligible
+        eligible_schemes.append(
+            (scheme["name"], scheme.get("scheme_category", "General"))
+        )
 
     return eligible_schemes
