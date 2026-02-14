@@ -11,7 +11,7 @@
     "income_limit": 300000,
     "occupation": "Student",
     "land_required": false,
-    "priority_category": ["SC","ST","OBC","General"]
+    "priority_category": ["General","OBC","SC","ST"]
   },
   {
     "name": "Free Laptop Scheme",
@@ -42,13 +42,6 @@
     "priority_category": ["General","OBC","SC","ST"]
   },
   {
-    "name": "Differently Abled Pension Scheme",
-    "income_limit": 250000,
-    "occupation": "Unemployed",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"]
-  },
-  {
     "name": "PM-KISAN (TN Beneficiaries)",
     "income_limit": 300000,
     "occupation": "Farmer",
@@ -74,14 +67,14 @@
     "income_limit": 250000,
     "occupation": "Unemployed",
     "land_required": false,
-    "priority_category": ["SC","ST","OBC","General"]
+    "priority_category": ["General","OBC","SC","ST"]
   },
   {
     "name": "Amma Two Wheeler Scheme",
     "income_limit": 300000,
     "occupation": "Private Job",
     "land_required": false,
-    "priority_category": ["SC","ST","OBC","General"]
+    "priority_category": ["General","OBC","SC","ST"]
   },
   {
     "name": "Free Bus Travel for Women",
@@ -105,20 +98,6 @@
     "priority_category": ["General","OBC","SC","ST"]
   },
   {
-    "name": "Free Sewing Machine Scheme",
-    "income_limit": 200000,
-    "occupation": "Unemployed",
-    "land_required": false,
-    "priority_category": ["SC","ST","OBC"]
-  },
-  {
-    "name": "Chief Minister Youth Employment Scheme",
-    "income_limit": 300000,
-    "occupation": "Unemployed",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"]
-  },
-  {
     "name": "Skill Development Scheme",
     "income_limit": 400000,
     "occupation": "Unemployed",
@@ -126,73 +105,24 @@
     "priority_category": ["General","OBC","SC","ST"]
   },
   {
-    "name": "Free Goat Distribution Scheme",
-    "income_limit": 200000,
-    "occupation": "Unemployed",
-    "land_required": false,
-    "priority_category": ["SC","ST"]
-  },
-  {
-    "name": "Free Milking Cow Scheme",
-    "income_limit": 250000,
-    "occupation": "Farmer",
-    "land_required": true,
-    "priority_category": ["SC","ST","OBC"]
-  },
-  {
-    "name": "Uzhavar Sandhai Farmer Market Scheme",
-    "income_limit": 500000,
-    "occupation": "Farmer",
-    "land_required": true,
-    "priority_category": ["General","OBC","SC","ST"]
-  },
-  {
-    "name": "Chief Minister's Girl Child Protection Scheme",
-    "income_limit": 200000,
-    "occupation": "Unemployed",
-    "land_required": false,
-    "priority_category": ["SC","ST","OBC","General"]
-  },
-  {
-    "name": "Adi Dravidar Housing Scheme",
-    "income_limit": 250000,
-    "occupation": "Unemployed",
-    "land_required": false,
-    "priority_category": ["SC"]
-  },
-  {
-    "name": "Minority Welfare Scholarship",
-    "income_limit": 300000,
-    "occupation": "Student",
+    "name": "Government Employee Medical Insurance",
+    "income_limit": 1000000,
+    "occupation": "Government Employee",
     "land_required": false,
     "priority_category": ["General","OBC","SC","ST"]
   },
   {
-    "name": "Urban Employment Scheme",
-    "income_limit": 250000,
-    "occupation": "Unemployed",
+    "name": "Government Employee Housing Advance Scheme",
+    "income_limit": 1200000,
+    "occupation": "Government Employee",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Government Employee Pension Benefit Scheme",
+    "income_limit": 1500000,
+    "occupation": "Government Employee",
     "land_required": false,
     "priority_category": ["General","OBC","SC","ST"]
   }
-  {
-  "name": "Tamil Nadu Government Employee Medical Insurance",
-  "income_limit": 1000000,
-  "occupation": "Government Employee",
-  "land_required": false,
-  "priority_category": ["General","OBC","SC","ST"]
-},
-{
-  "name": "Government Employee Housing Advance Scheme",
-  "income_limit": 1200000,
-  "occupation": "Government Employee",
-  "land_required": false,
-  "priority_category": ["General","OBC","SC","ST"]
-},
-{
-  "name": "Government Employee Pension Benefit Scheme",
-  "income_limit": 1500000,
-  "occupation": "Government Employee",
-  "land_required": false,
-  "priority_category": ["General","OBC","SC","ST"]
-}
 ]
