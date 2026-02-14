@@ -6,14 +6,13 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
 
-# ---------------- PAGE CONFIG ----------------
-st.set_page_config(page_title="TN Scheme Mapper", layout="wide")
+st.set_page_config(page_title="TN Revenue Scheme Mapper", layout="wide")
 
-st.title("Tamil Nadu Government Scheme Mapper")
+st.title("Tamil Nadu Revenue Integrated Scheme Mapper")
 
 schemes = load_schemes()
 
-# ---------------- SIDEBAR INPUTS ----------------
+# ---------------- SIDEBAR ----------------
 st.sidebar.header("Citizen Details")
 
 age = st.sidebar.slider("Age", 18, 80)
@@ -21,22 +20,15 @@ income = st.sidebar.number_input("Annual Income (₹)", min_value=0)
 
 occupation = st.sidebar.selectbox(
     "Occupation",
-    [
-        "Farmer",
-        "Student",
-        "Unemployed",
-        "Private Job",
-        "Government Employee",
-        "Fisherman",
-        "Salt Pan Worker"
-    ]
+    ["Farmer","Student","Unemployed","Private Job",
+     "Government Employee","Fisherman","Salt Pan Worker"]
 )
 
-gender = st.sidebar.selectbox("Gender", ["Male", "Female", "Other"])
+gender = st.sidebar.selectbox("Gender", ["Male","Female","Other"])
 
-land = st.sidebar.selectbox("Own Agricultural Land?", ["Yes", "No"])
+land = st.sidebar.selectbox("Own Agricultural Land?", ["Yes","No"])
 
-category = st.sidebar.selectbox("Category", ["General", "OBC", "SC", "ST"])
+category = st.sidebar.selectbox("Category", ["General","OBC","SC","ST"])
 
 district = st.sidebar.selectbox(
     "District",
@@ -52,40 +44,45 @@ district = st.sidebar.selectbox(
     ]
 )
 
-# ---- Worker Registration Verification ----
 registration_status = st.sidebar.selectbox(
     "Registered in Welfare Board?",
-    ["Yes", "No"]
+    ["Yes","No"]
 )
 
-# ---------------- CHECK ELIGIBILITY ----------------
+# -------- Revenue Verification --------
+st.sidebar.subheader("Revenue Verification")
+
+income_verified = st.sidebar.selectbox(
+    "Income Certificate Verified?",
+    ["Yes","No"]
+)
+
+patta_number = st.sidebar.text_input("Patta Number (Land Record ID)")
+caste_certificate = st.sidebar.text_input("Caste Certificate Number")
+family_card_number = st.sidebar.text_input("Family Card Number")
+
+# ---------------- CHECK ----------------
 if st.sidebar.button("Check Eligibility"):
 
     results = find_eligible_schemes(
-        age,
-        income,
-        occupation,
-        land,
-        category,
-        gender,
-        district,
-        schemes,
-        registration_status
+        age, income, occupation, land, category, gender, district,
+        schemes, registration_status,
+        income_verified, patta_number,
+        caste_certificate, family_card_number
     )
 
     st.header("Eligible Schemes")
 
     if results:
 
-        df = pd.DataFrame(results, columns=["Scheme", "Category"])
+        df = pd.DataFrame(results, columns=["Scheme","Category"])
         st.dataframe(df)
 
-        # -------- Dashboard --------
         st.header("Analytics Dashboard")
         st.metric("Total Eligible Schemes", len(df))
         st.bar_chart(df["Category"].value_counts())
 
-        # -------- PDF GENERATION --------
+        # PDF
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer)
         elements = []
