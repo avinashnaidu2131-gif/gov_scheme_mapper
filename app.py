@@ -8,7 +8,7 @@ st.set_page_config(page_title="Tamil Nadu Scheme Mapper", layout="centered")
 
 st.title("AI Platform to Map Tamil Nadu Govt Schemes")
 
-# Load schemes
+# Load scheme dataset
 schemes = load_schemes()
 
 # ===============================
@@ -45,17 +45,18 @@ if st.button("Find Eligible Schemes"):
         age, income, occupation, land, category, schemes
     )
 
-    st.subheader("Eligibility Results")
+    st.subheader("Eligible Schemes")
 
-    for name, status in results:
-        if status == "Eligible":
-            st.success(f"✅ {name} — Eligible")
-        else:
-            st.error(f"❌ {name} — Not Eligible")
+    if results:
+        for name in results:
+            st.success(f"✅ {name}")
+    else:
+        st.warning("No schemes eligible based on provided details.")
 
 # ===============================
 # CHATBOT SECTION
 # ===============================
+st.divider()
 st.header("AI Scheme Assistant (Chatbot)")
 
 user_input = st.text_area(
@@ -66,11 +67,11 @@ def extract_details(text):
 
     text = text.lower()
 
-    # Age
+    # Age extraction
     age_match = re.search(r'(\d{1,2})\s*year', text)
     age = int(age_match.group(1)) if age_match else 30
 
-    # Income (lakh)
+    # Income extraction
     income_match = re.search(r'(\d+)\s*lakh', text)
     if income_match:
         income = int(income_match.group(1)) * 100000
@@ -78,7 +79,7 @@ def extract_details(text):
         income_number = re.search(r'(\d{5,7})', text)
         income = int(income_number.group(1)) if income_number else 200000
 
-    # Occupation
+    # Occupation detection
     if "farmer" in text:
         occupation = "Farmer"
     elif "student" in text:
@@ -88,7 +89,7 @@ def extract_details(text):
     else:
         occupation = "Private Job"
 
-    # Land
+    # Land detection
     if "no land" in text:
         land = "No"
     elif "land" in text:
@@ -96,7 +97,7 @@ def extract_details(text):
     else:
         land = "No"
 
-    # Category
+    # Category detection
     if "sc" in text:
         category = "SC"
     elif "st" in text:
@@ -124,10 +125,10 @@ if st.button("Ask Chatbot"):
         age, income, occupation, land, category, schemes
     )
 
-    st.subheader("Chatbot Eligibility Results")
+    st.subheader("Eligible Schemes")
 
-    for name, status in results:
-        if status == "Eligible":
-            st.success(f"✅ {name} — Eligible")
-        else:
-            st.error(f"❌ {name} — Not Eligible")
+    if results:
+        for name in results:
+            st.success(f"✅ {name}")
+    else:
+        st.warning("No schemes eligible based on chatbot input.")
