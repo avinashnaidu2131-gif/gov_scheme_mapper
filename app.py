@@ -9,7 +9,7 @@ CLIENT_ID = st.secrets["GOOGLE_CLIENT_ID"]
 CLIENT_SECRET = st.secrets["GOOGLE_CLIENT_SECRET"]
 
 # ===== STATIC REDIRECT (MATCH GOOGLE CONSOLE EXACTLY) =====
-REDIRECT_URI = "https://govschememapper-kdtfcxuor89mkd3fy8hrdc.streamlit.app/oauth2callback"
+REDIRECT_URI = "https://govschememapper-kdtfcxuor89mkd3fy8hrdc.streamlit.app"
 
 AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
