@@ -4,8 +4,14 @@ def find_eligible_schemes(age, income, occupation, land, category, gender, distr
 
     for scheme in schemes:
 
-        # STRICT occupation match
-        if scheme.get("occupation") != occupation:
+        # Occupation check (allow "Any")
+        scheme_occ = scheme.get("occupation")
+        if scheme_occ != "Any" and scheme_occ != occupation:
+            continue
+
+        # Gender check
+        required_gender = scheme.get("gender_required")
+        if required_gender and required_gender != gender:
             continue
 
         # Income check
@@ -27,7 +33,15 @@ def find_eligible_schemes(age, income, occupation, land, category, gender, distr
                 if district not in scheme_districts:
                     continue
 
-        # If all conditions passed → eligible
+        # Age-based logic
+        min_age = scheme.get("min_age")
+        if min_age and age < min_age:
+            continue
+
+        max_age = scheme.get("max_age")
+        if max_age and age > max_age:
+            continue
+
         eligible_schemes.append(
             (scheme["name"], scheme.get("scheme_category", "General"))
         )

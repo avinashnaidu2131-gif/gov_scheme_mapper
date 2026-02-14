@@ -79,7 +79,7 @@
   {
     "name": "Free Bus Travel for Women",
     "income_limit": 500000,
-    "occupation": "Private Job",
+    "occupation": "Any"
     "land_required": false,
     "priority_category": ["General","OBC","SC","ST"]
   },
