@@ -4,43 +4,60 @@ def find_eligible_schemes(age, income, occupation, land, category, gender, distr
 
     for scheme in schemes:
 
-        # -------- OCCUPATION CHECK --------
-        scheme_occ = scheme.get("occupation")
+        # -------- AGE CHECK --------
+        if "min_age" in scheme:
+            if age < scheme["min_age"]:
+                continue
 
-        if scheme_occ:
+        if "max_age" in scheme:
+            if age > scheme["max_age"]:
+                continue
+
+        # -------- INCOME CHECK --------
+        if "income_limit" in scheme:
+            if income > scheme["income_limit"]:
+                continue
+
+        # -------- OCCUPATION CHECK --------
+        if "occupation" in scheme:
+            scheme_occ = scheme["occupation"]
+
             if scheme_occ != "Any":
                 if isinstance(scheme_occ, list):
                     if occupation not in scheme_occ:
                         continue
                 else:
-                    if scheme_occ != occupation:
+                    if occupation != scheme_occ:
                         continue
 
         # -------- GENDER CHECK --------
-        required_gender = scheme.get("gender_required")
-        if required_gender:
-            if required_gender != gender:
+        if "gender_required" in scheme:
+            if gender != scheme["gender_required"]:
                 continue
 
-        # -------- INCOME CHECK --------
-        if income > scheme.get("income_limit", 999999999):
-            continue
-
         # -------- LAND CHECK --------
-        if scheme.get("land_required") and land != "Yes":
-            continue
+        if "land_required" in scheme:
+            if scheme["land_required"] is True and land != "Yes":
+                continue
 
         # -------- CATEGORY CHECK --------
-        if category not in scheme.get("priority_category", []):
-            continue
+        if "priority_category" in scheme:
+            if category not in scheme["priority_category"]:
+                continue
 
-        # -------- DISTRICT CHECK (SAFE) --------
-        scheme_districts = scheme.get("districts")
-        if scheme_districts and scheme_districts != "All":
-            if isinstance(scheme_districts, list):
-                if district not in scheme_districts:
-                    continue
+        # -------- DISTRICT CHECK --------
+        if "districts" in scheme:
+            scheme_districts = scheme["districts"]
 
+            if scheme_districts != "All":
+                if isinstance(scheme_districts, list):
+                    if district not in scheme_districts:
+                        continue
+                else:
+                    if district != scheme_districts:
+                        continue
+
+        # If ALL checks passed
         eligible_schemes.append(
             (scheme["name"], scheme.get("scheme_category", "General"))
         )
