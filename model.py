@@ -1,4 +1,4 @@
-def find_eligible_schemes(age, income, occupation, land, category, gender, district, schemes):
+def find_eligible_schemes(age, income, occupation, land, category, gender, district, schemes, registration_status):
 
     eligible_schemes = []
 
@@ -58,7 +58,14 @@ def find_eligible_schemes(age, income, occupation, land, category, gender, distr
                     if district != scheme_districts:
                         continue
 
-        # If all strict conditions passed
+        # ---- WORKER REGISTRATION CHECK ----
+        if "eligibility_conditions" in scheme:
+            conditions = scheme["eligibility_conditions"]
+
+            if conditions.get("registration_required", False):
+                if registration_status != "Yes":
+                    continue
+
         eligible_schemes.append(
             (scheme["name"], scheme.get("scheme_category", "General"))
         )
