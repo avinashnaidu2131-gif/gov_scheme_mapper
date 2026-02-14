@@ -1,4 +1,4 @@
-def find_eligible_schemes(age, income, occupation, land, category, gender, schemes):
+def find_eligible_schemes(age, income, occupation, land, category, gender, district, schemes):
 
     eligible_schemes = []
 
@@ -12,16 +12,17 @@ def find_eligible_schemes(age, income, occupation, land, category, gender, schem
         if scheme["occupation"] == occupation:
             score += 1
 
-        if scheme.get("gender") and scheme["gender"] != gender:
-            continue
-
         if scheme["land_required"] and land == "Yes":
             score += 1
 
         if category in scheme["priority_category"]:
             score += 1
 
+        # District filter
+        if scheme["districts"] != "All" and district not in scheme["districts"]:
+            continue
+
         if score >= 2:
-            eligible_schemes.append(scheme["name"])
+            eligible_schemes.append((scheme["name"], scheme["scheme_category"]))
 
     return eligible_schemes
