@@ -1,39 +1,83 @@
 import streamlit as st
+import requests
+from urllib.parse import urlencode
 
 st.set_page_config(page_title="TN Revenue Portal", layout="wide")
 
-# ---------- SESSION ----------
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
+CLIENT_ID = st.secrets["GOOGLE_CLIENT_ID"]
+CLIENT_SECRET = st.secrets["GOOGLE_CLIENT_SECRET"]
 
-if "role" not in st.session_state:
-    st.session_state.role = None
+REDIRECT_URI = "https://govschememapper-dc9c39ssqouued9awzjhtb.streamlit.app/"
 
-# ---------- LOGIN ----------
-if not st.session_state.logged_in:
+AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+TOKEN_URL = "https://oauth2.googleapis.com/token"
+USER_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
+
+if "user" not in st.session_state:
+    st.session_state.user = None
+
+# ---------------- LOGIN ----------------
+if not st.session_state.user:
 
     st.title("🔐 Tamil Nadu Revenue Department Portal")
+    st.subheader("Login using Google")
 
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+    params = {
+        "client_id": CLIENT_ID,
+        "redirect_uri": REDIRECT_URI,
+        "response_type": "code",
+        "scope": "openid email profile",
+        "access_type": "offline",
+        "prompt": "select_account",
+    }
 
-    if st.button("Login"):
+    auth_url = f"{AUTH_URL}?{urlencode(params)}"
+    st.markdown(f"[🔑 Login with Google]({auth_url})")
 
-        if username == "admin" and password == "admin123":
-            st.session_state.logged_in = True
-            st.session_state.role = "Officer"
-            st.rerun()
+    query_params = st.query_params
 
-        elif username == "user" and password == "user123":
-            st.session_state.logged_in = True
-            st.session_state.role = "Citizen"
-            st.rerun()
+    if "code" in query_params:
+        code = query_params["code"]
 
-        else:
-            st.error("Invalid credentials")
+        token_data = {
+            "code": code,
+            "client_id": CLIENT_ID,
+            "client_secret": CLIENT_SECRET,
+            "redirect_uri": REDIRECT_URI,
+            "grant_type": "authorization_code",
+        }
+
+        token_response = requests.post(TOKEN_URL, data=token_data)
+        token_json = token_response.json()
+
+        access_token = token_json.get("access_token")
+
+        headers = {"Authorization": f"Bearer {access_token}"}
+        user_info = requests.get(USER_INFO_URL, headers=headers).json()
+
+        st.session_state.user = user_info
+        st.rerun()
 
     st.stop()
 
-st.sidebar.success(f"Logged in as: {st.session_state.role}")
+# ---------------- AFTER LOGIN ----------------
+user = st.session_state.user
+
+st.success(f"Logged in as {user['email']}")
+
+# Role detection
+if user["email"].endswith("@tn.gov.in"):
+    role = "Officer"
+else:
+    role = "Citizen"
+
+st.session_state.role = role
+
+st.sidebar.success(f"Role: {role}")
+
+if st.sidebar.button("Logout"):
+    st.session_state.clear()
+    st.rerun()
+
 st.title("Tamil Nadu Government Scheme Mapper")
-st.info("Use the left sidebar to navigate.")
+st.info("Use sidebar to navigate pages.")
