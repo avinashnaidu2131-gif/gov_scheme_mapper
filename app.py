@@ -6,14 +6,13 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from io import BytesIO
 
-# ---------------- APP CONFIG ----------------
 st.set_page_config(page_title="TN Scheme Mapper", layout="wide")
 
 st.title("Tamil Nadu Government Scheme Mapper")
 
 schemes = load_schemes()
 
-# ---------------- SIDEBAR INPUTS ----------------
+# -------- SIDEBAR INPUTS --------
 st.sidebar.header("Citizen Details")
 
 age = st.sidebar.slider("Age", 18, 80)
@@ -21,7 +20,15 @@ income = st.sidebar.number_input("Annual Income (₹)", min_value=0)
 
 occupation = st.sidebar.selectbox(
     "Occupation",
-    ["Farmer","Student","Unemployed","Private Job","Government Employee"]
+    [
+        "Farmer",
+        "Student",
+        "Unemployed",
+        "Private Job",
+        "Government Employee",
+        "Fisherman",
+        "Salt Pan Worker"
+    ]
 )
 
 gender = st.sidebar.selectbox("Gender", ["Male","Female","Other"])
@@ -44,7 +51,7 @@ district = st.sidebar.selectbox(
     ]
 )
 
-# ---------------- ELIGIBILITY ----------------
+# -------- CHECK ELIGIBILITY --------
 if st.sidebar.button("Check Eligibility"):
 
     results = find_eligible_schemes(
@@ -58,12 +65,11 @@ if st.sidebar.button("Check Eligibility"):
         df = pd.DataFrame(results, columns=["Scheme","Category"])
         st.dataframe(df)
 
-        # Dashboard
         st.header("Analytics Dashboard")
         st.metric("Total Eligible Schemes", len(df))
         st.bar_chart(df["Category"].value_counts())
 
-        # -------- PDF GENERATION --------
+        # ---- PDF GENERATION ----
         buffer = BytesIO()
         doc = SimpleDocTemplate(buffer)
         elements = []

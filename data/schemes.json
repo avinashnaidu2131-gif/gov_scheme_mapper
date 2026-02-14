@@ -5,7 +5,8 @@
     "occupation": "Farmer",
     "land_required": true,
     "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Agriculture"
+    "scheme_category": "Agriculture",
+    "districts": "All"
   },
   {
     "name": "Chief Minister Solar Pump Set Scheme",
@@ -13,23 +14,8 @@
     "occupation": "Farmer",
     "land_required": true,
     "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Agriculture"
-  },
-  {
-    "name": "Crop Insurance Scheme",
-    "income_limit": 500000,
-    "occupation": "Farmer",
-    "land_required": true,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Agriculture"
-  },
-  {
-    "name": "Uzhavar Sandhai Support Scheme",
-    "income_limit": 500000,
-    "occupation": "Farmer",
-    "land_required": true,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Agriculture"
+    "scheme_category": "Agriculture",
+    "districts": "All"
   },
   {
     "name": "Free Laptop Scheme",
@@ -37,23 +23,8 @@
     "occupation": "Student",
     "land_required": false,
     "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Education"
-  },
-  {
-    "name": "Moovalur Ramamirtham Ammaiyar Higher Education Scheme",
-    "income_limit": 300000,
-    "occupation": "Student",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Education"
-  },
-  {
-    "name": "Minority Welfare Scholarship",
-    "income_limit": 300000,
-    "occupation": "Student",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Education"
+    "scheme_category": "Education",
+    "districts": "All"
   },
   {
     "name": "Kalaignar Magalir Urimai Thogai",
@@ -62,7 +33,8 @@
     "gender_required": "Female",
     "land_required": false,
     "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Women Welfare"
+    "scheme_category": "Women Welfare",
+    "districts": "All"
   },
   {
     "name": "Free Bus Travel for Women",
@@ -71,42 +43,8 @@
     "gender_required": "Female",
     "land_required": false,
     "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Women Welfare"
-  },
-  {
-    "name": "Amma Two Wheeler Scheme",
-    "income_limit": 300000,
-    "occupation": ["Private Job","Unemployed"],
-    "gender_required": "Female",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Women Welfare"
-  },
-  {
-    "name": "Marriage Assistance Scheme",
-    "income_limit": 200000,
-    "occupation": "Unemployed",
-    "gender_required": "Female",
-    "land_required": false,
-    "priority_category": ["SC","ST","OBC"],
-    "scheme_category": "Women Welfare"
-  },
-  {
-    "name": "Dr. Muthulakshmi Reddy Maternity Benefit Scheme",
-    "income_limit": 250000,
-    "occupation": "Any",
-    "gender_required": "Female",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Health"
-  },
-  {
-    "name": "Chief Minister Comprehensive Health Insurance Scheme",
-    "income_limit": 300000,
-    "occupation": "Any",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Health"
+    "scheme_category": "Women Welfare",
+    "districts": "All"
   },
   {
     "name": "Old Age Pension Scheme",
@@ -115,56 +53,8 @@
     "min_age": 60,
     "land_required": false,
     "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Social Security"
-  },
-  {
-    "name": "Destitute Widow Pension Scheme",
-    "income_limit": 200000,
-    "occupation": "Any",
-    "gender_required": "Female",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Social Security"
-  },
-  {
-    "name": "Skill Development Scheme",
-    "income_limit": 400000,
-    "occupation": "Unemployed",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Employment"
-  },
-  {
-    "name": "Chief Minister Youth Employment Scheme",
-    "income_limit": 300000,
-    "occupation": "Unemployed",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Employment"
-  },
-  {
-    "name": "Urban Employment Scheme",
-    "income_limit": 250000,
-    "occupation": "Unemployed",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Employment"
-  },
-  {
-    "name": "Kalaignar Kanavu Illam Housing Scheme",
-    "income_limit": 250000,
-    "occupation": "Any",
-    "land_required": false,
-    "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Housing"
-  },
-  {
-    "name": "Adi Dravidar Housing Scheme",
-    "income_limit": 250000,
-    "occupation": "Any",
-    "land_required": false,
-    "priority_category": ["SC"],
-    "scheme_category": "Housing"
+    "scheme_category": "Social Security",
+    "districts": "All"
   },
   {
     "name": "Government Employee Medical Insurance",
@@ -172,22 +62,114 @@
     "occupation": "Government Employee",
     "land_required": false,
     "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Government Employee"
+    "scheme_category": "Government Employee",
+    "districts": "All"
   },
   {
-    "name": "Government Employee Housing Advance Scheme",
-    "income_limit": 1200000,
-    "occupation": "Government Employee",
+    "name": "Fishing Ban & Lean Period Assistance",
+    "income_limit": 999999,
+    "occupation": "Fisherman",
     "land_required": false,
     "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Government Employee"
+    "scheme_category": "Fisheries",
+    "districts": ["Thoothukudi"]
   },
   {
-    "name": "Government Employee Pension Benefit Scheme",
-    "income_limit": 1500000,
-    "occupation": "Government Employee",
+    "name": "Savings-cum-Relief Scheme for Fisherfolk",
+    "income_limit": 999999,
+    "occupation": "Fisherman",
     "land_required": false,
     "priority_category": ["General","OBC","SC","ST"],
-    "scheme_category": "Government Employee"
+    "scheme_category": "Fisheries",
+    "districts": ["Thoothukudi"]
+  },
+  {
+    "name": "Fishermen Group Accident Insurance",
+    "income_limit": 120000,
+    "occupation": "Fisherman",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"],
+    "scheme_category": "Fisheries",
+    "districts": ["Thoothukudi"]
+  },
+  {
+    "name": "Seaweed Cultivation Support for Fisherwomen",
+    "income_limit": 54000,
+    "occupation": "Fisherman",
+    "gender_required": "Female",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"],
+    "scheme_category": "Fisheries",
+    "districts": ["Thoothukudi"]
+  },
+  {
+    "name": "Kalaignarin All Village Integrated Agriculture Development Programme",
+    "selected_villages": ["Ottapidaram","K. Subramaniyapuram","Vilathikulam","Kayathar","Pudur","Kovilpatti","Srivaikundam","Karungulam","Alwarthirunagari","Sattankulam","Thoothukudi","Udangudi","Tiruchendur"],
+    "income_limit": 999999,
+    "occupation": "Farmer",
+    "land_required": true,
+    "priority_category": ["General","OBC","SC","ST"],
+    "scheme_category": "Agriculture",
+    "districts": ["Thoothukudi"]
+  },
+  {
+    "name": "Micro Irrigation Scheme (PMKSY)",
+    "income_limit": 999999,
+    "occupation": "Farmer",
+    "land_required": true,
+    "priority_category": ["General","OBC","SC","ST"],
+    "scheme_category": "Agriculture",
+    "districts": ["Thoothukudi"],
+    "subsidy_rules": {
+      "small_marginal_farmer": {
+        "land_less_than_acres": 5,
+        "subsidy_percent": 100
+      },
+      "other_farmers": {
+        "land_greater_equal_acres": 5,
+        "subsidy_percent": 75
+      }
+    }
+  },
+  {
+    "name": "Salt Pan Workers Monsoon Relief",
+    "income_limit": 999999,
+    "occupation": "Salt Pan Worker",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"],
+    "scheme_category": "Social Welfare",
+    "districts": ["Thoothukudi"],
+    "eligibility_conditions": {
+      "registration_required": true,
+      "registered_in": "State Manual Workers Welfare Board"
+    }
+  },
+  {
+    "name": "Anbucholai Senior Citizen Support Scheme",
+    "income_limit": 120000,
+    "occupation": "Any",
+    "min_age": 60,
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"],
+    "scheme_category": "Social Welfare",
+    "districts": ["Thoothukudi"]
+  },
+  {
+    "name": "UYEGP Self Employment Scheme",
+    "income_limit": 500000,
+    "occupation": ["Unemployed","Private Job"],
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"],
+    "scheme_category": "Employment",
+    "districts": ["Thoothukudi"]
+  },
+  {
+    "name": "Solar Powered Green House Scheme (CMSPGHS)",
+    "income_limit": 120000,
+    "occupation": "Any",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"],
+    "scheme_category": "Housing",
+    "districts": ["Thoothukudi"]
   }
 ]

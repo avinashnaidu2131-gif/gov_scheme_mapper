@@ -4,7 +4,7 @@ def find_eligible_schemes(age, income, occupation, land, category, gender, distr
 
     for scheme in schemes:
 
-        # -------- AGE CHECK --------
+        # ---- AGE CHECK ----
         if "min_age" in scheme:
             if age < scheme["min_age"]:
                 continue
@@ -13,12 +13,13 @@ def find_eligible_schemes(age, income, occupation, land, category, gender, distr
             if age > scheme["max_age"]:
                 continue
 
-        # -------- INCOME CHECK --------
+        # ---- INCOME CHECK ----
         if "income_limit" in scheme:
-            if income > scheme["income_limit"]:
-                continue
+            if scheme["income_limit"] is not None:
+                if income > scheme["income_limit"]:
+                    continue
 
-        # -------- OCCUPATION CHECK --------
+        # ---- OCCUPATION CHECK ----
         if "occupation" in scheme:
             scheme_occ = scheme["occupation"]
 
@@ -30,22 +31,22 @@ def find_eligible_schemes(age, income, occupation, land, category, gender, distr
                     if occupation != scheme_occ:
                         continue
 
-        # -------- GENDER CHECK --------
+        # ---- GENDER CHECK ----
         if "gender_required" in scheme:
             if gender != scheme["gender_required"]:
                 continue
 
-        # -------- LAND CHECK --------
+        # ---- LAND CHECK ----
         if "land_required" in scheme:
-            if scheme["land_required"] is True and land != "Yes":
+            if scheme["land_required"] and land != "Yes":
                 continue
 
-        # -------- CATEGORY CHECK --------
+        # ---- CATEGORY CHECK ----
         if "priority_category" in scheme:
             if category not in scheme["priority_category"]:
                 continue
 
-        # -------- DISTRICT CHECK --------
+        # ---- DISTRICT CHECK ----
         if "districts" in scheme:
             scheme_districts = scheme["districts"]
 
@@ -57,7 +58,7 @@ def find_eligible_schemes(age, income, occupation, land, category, gender, distr
                     if district != scheme_districts:
                         continue
 
-        # If ALL checks passed
+        # If all strict conditions passed
         eligible_schemes.append(
             (scheme["name"], scheme.get("scheme_category", "General"))
         )
