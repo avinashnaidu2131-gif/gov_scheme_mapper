@@ -1,20 +1,174 @@
 [
   {
-    "name": "PM-KISAN",
+    "name": "Kalaignar Magalir Urimai Thogai",
+    "income_limit": 250000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Moovalur Ramamirtham Ammaiyar Higher Education Scheme",
+    "income_limit": 300000,
+    "occupation": "Student",
+    "land_required": false,
+    "priority_category": ["SC","ST","OBC","General"]
+  },
+  {
+    "name": "Free Laptop Scheme",
+    "income_limit": 400000,
+    "occupation": "Student",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Chief Minister Comprehensive Health Insurance Scheme",
+    "income_limit": 300000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Old Age Pension Scheme",
+    "income_limit": 200000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Destitute Widow Pension Scheme",
+    "income_limit": 200000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Differently Abled Pension Scheme",
+    "income_limit": 250000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "PM-KISAN (TN Beneficiaries)",
     "income_limit": 300000,
     "occupation": "Farmer",
     "land_required": true,
     "priority_category": ["General","OBC","SC","ST"]
   },
   {
-    "name": "Education Scholarship",
+    "name": "Chief Minister Solar Pump Set Scheme",
+    "income_limit": 400000,
+    "occupation": "Farmer",
+    "land_required": true,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Crop Insurance Scheme",
+    "income_limit": 500000,
+    "occupation": "Farmer",
+    "land_required": true,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Kalaignar Kanavu Illam Housing Scheme",
+    "income_limit": 250000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["SC","ST","OBC","General"]
+  },
+  {
+    "name": "Amma Two Wheeler Scheme",
+    "income_limit": 300000,
+    "occupation": "Private Job",
+    "land_required": false,
+    "priority_category": ["SC","ST","OBC","General"]
+  },
+  {
+    "name": "Free Bus Travel for Women",
+    "income_limit": 500000,
+    "occupation": "Private Job",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Marriage Assistance Scheme",
     "income_limit": 200000,
-    "occupation": "Student",
+    "occupation": "Unemployed",
     "land_required": false,
     "priority_category": ["SC","ST","OBC"]
   },
   {
-    "name": "PM Awas Yojana",
+    "name": "Dr. Muthulakshmi Reddy Maternity Benefit Scheme",
+    "income_limit": 250000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Free Sewing Machine Scheme",
+    "income_limit": 200000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["SC","ST","OBC"]
+  },
+  {
+    "name": "Chief Minister Youth Employment Scheme",
+    "income_limit": 300000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Skill Development Scheme",
+    "income_limit": 400000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Free Goat Distribution Scheme",
+    "income_limit": 200000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["SC","ST"]
+  },
+  {
+    "name": "Free Milking Cow Scheme",
+    "income_limit": 250000,
+    "occupation": "Farmer",
+    "land_required": true,
+    "priority_category": ["SC","ST","OBC"]
+  },
+  {
+    "name": "Uzhavar Sandhai Farmer Market Scheme",
+    "income_limit": 500000,
+    "occupation": "Farmer",
+    "land_required": true,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Chief Minister's Girl Child Protection Scheme",
+    "income_limit": 200000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["SC","ST","OBC","General"]
+  },
+  {
+    "name": "Adi Dravidar Housing Scheme",
+    "income_limit": 250000,
+    "occupation": "Unemployed",
+    "land_required": false,
+    "priority_category": ["SC"]
+  },
+  {
+    "name": "Minority Welfare Scholarship",
+    "income_limit": 300000,
+    "occupation": "Student",
+    "land_required": false,
+    "priority_category": ["General","OBC","SC","ST"]
+  },
+  {
+    "name": "Urban Employment Scheme",
     "income_limit": 250000,
     "occupation": "Unemployed",
     "land_required": false,
