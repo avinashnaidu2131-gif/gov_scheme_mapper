@@ -3,19 +3,26 @@ import re
 from model import find_eligible_schemes
 from utils.helpers import load_schemes
 
-st.set_page_config(page_title="Gov Scheme Mapper", layout="centered")
+# Page config
+st.set_page_config(page_title="Tamil Nadu Scheme Mapper", layout="centered")
 
-st.title("AI Platform to Map Govt Schemes to Beneficiaries")
+st.title("AI Platform to Map Tamil Nadu Govt Schemes")
 
+# Load schemes
 schemes = load_schemes()
 
-# =========================
-# MANUAL FORM SECTION
-# =========================
+# ===============================
+# MANUAL ELIGIBILITY SECTION
+# ===============================
 st.header("Manual Eligibility Check")
 
 age = st.slider("Age", 18, 80)
-income = st.number_input("Annual Income (₹)", min_value=0, step=1000)
+
+income = st.number_input(
+    "Annual Income (₹)",
+    min_value=0,
+    step=1000
+)
 
 occupation = st.selectbox(
     "Occupation",
@@ -46,9 +53,9 @@ if st.button("Find Eligible Schemes"):
         else:
             st.error(f"❌ {name} — Not Eligible")
 
-# =========================
+# ===============================
 # CHATBOT SECTION
-# =========================
+# ===============================
 st.header("AI Scheme Assistant (Chatbot)")
 
 user_input = st.text_area(
@@ -57,12 +64,14 @@ user_input = st.text_area(
 
 def extract_details(text):
 
+    text = text.lower()
+
     # Age
-    age_match = re.search(r'(\d{1,2})\s*year', text.lower())
+    age_match = re.search(r'(\d{1,2})\s*year', text)
     age = int(age_match.group(1)) if age_match else 30
 
-    # Income
-    income_match = re.search(r'(\d+)\s*lakh', text.lower())
+    # Income (lakh)
+    income_match = re.search(r'(\d+)\s*lakh', text)
     if income_match:
         income = int(income_match.group(1)) * 100000
     else:
@@ -70,27 +79,29 @@ def extract_details(text):
         income = int(income_number.group(1)) if income_number else 200000
 
     # Occupation
-    if "farmer" in text.lower():
+    if "farmer" in text:
         occupation = "Farmer"
-    elif "student" in text.lower():
+    elif "student" in text:
         occupation = "Student"
-    elif "unemployed" in text.lower():
+    elif "unemployed" in text:
         occupation = "Unemployed"
     else:
         occupation = "Private Job"
 
     # Land
-    if "land" in text.lower() and "no land" not in text.lower():
+    if "no land" in text:
+        land = "No"
+    elif "land" in text:
         land = "Yes"
     else:
         land = "No"
 
     # Category
-    if "sc" in text.lower():
+    if "sc" in text:
         category = "SC"
-    elif "st" in text.lower():
+    elif "st" in text:
         category = "ST"
-    elif "obc" in text.lower():
+    elif "obc" in text:
         category = "OBC"
     else:
         category = "General"

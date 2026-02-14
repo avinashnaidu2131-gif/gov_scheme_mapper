@@ -1,6 +1,6 @@
 def find_eligible_schemes(age, income, occupation, land, category, schemes):
 
-    eligible = []
+    results = []
 
     for scheme in schemes:
 
@@ -18,9 +18,12 @@ def find_eligible_schemes(age, income, occupation, land, category, schemes):
         if category in scheme["priority_category"]:
             score += 1
 
+        # Decide eligibility
         if score >= 2:
-            eligible.append(
-                f'{scheme["name"]} (Score {score})'
-            )
+            status = "Eligible"
+        else:
+            status = "Not Eligible"
 
-    return eligible
+        results.append((scheme["name"], status))
+
+    return results
