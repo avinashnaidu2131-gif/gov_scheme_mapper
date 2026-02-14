@@ -6,68 +6,59 @@ def find_eligible_schemes(
     category,
     gender,
     district,
-    schemes,
     registration_status,
-    income_verified,
-    patta_number,
-    caste_certificate,
-    family_card_number
+    schemes
 ):
 
     eligible = []
 
     for scheme in schemes:
 
-        # ---- Income verification required ----
-        if income_verified != "Yes":
-            continue
-
-        # ---- Income limit ----
-        if "income_limit" in scheme and scheme["income_limit"] is not None:
+        # Income check
+        if scheme.get("income_limit") is not None:
             if income > scheme["income_limit"]:
                 continue
 
-        # ---- Age ----
-        if "min_age" in scheme:
+        # Age check
+        if scheme.get("min_age"):
             if age < scheme["min_age"]:
                 continue
 
-        # ---- Occupation ----
-        if scheme["occupation"] != "Any":
-            if isinstance(scheme["occupation"], list):
-                if occupation not in scheme["occupation"]:
+        # Occupation check
+        scheme_occ = scheme.get("occupation")
+
+        if scheme_occ != "Any":
+            if isinstance(scheme_occ, list):
+                if occupation not in scheme_occ:
                     continue
             else:
-                if occupation != scheme["occupation"]:
+                if occupation != scheme_occ:
                     continue
 
-        # ---- Land ----
-        if scheme.get("land_required", False):
-            if land != "Yes" or patta_number == "":
-                continue
-
-        # ---- Gender ----
-        if "gender_required" in scheme:
+        # Gender check
+        if scheme.get("gender_required"):
             if gender != scheme["gender_required"]:
                 continue
 
-        # ---- Category ----
-        if category not in scheme["priority_category"]:
-            continue
-
-        # ---- District ----
-        if scheme["districts"] != "All":
-            if district not in scheme["districts"]:
+        # Land requirement
+        if scheme.get("land_required"):
+            if land != "Yes":
                 continue
 
-        # ---- Welfare Registration ----
-        if occupation in ["Fisherman", "Salt Pan Worker"]:
+        # Category check
+        if category not in scheme.get("priority_category", []):
+            continue
+
+        # District check
+        districts = scheme.get("districts")
+        if districts != "All":
+            if district not in districts:
+                continue
+
+        # Worker registration check (for special schemes)
+        if scheme.get("registration_required"):
             if registration_status != "Yes":
                 continue
-
-        # ---- Certificate validation ----
-        if caste_certificate == "" or family_card_number == "":
-            continue
 
         eligible.append((scheme["name"], scheme["scheme_category"]))
 

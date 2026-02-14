@@ -3,34 +3,46 @@ import pandas as pd
 from model import find_eligible_schemes
 from utils.helpers import load_schemes
 
-if st.session_state.role != "Citizen":
-    st.warning("Access Denied")
-    st.stop()
-
 st.title("Citizen Eligibility Portal")
 
 schemes = load_schemes()
 
-age = st.slider("Age", 18, 80)
-income = st.number_input("Annual Income (₹)", min_value=0)
+st.sidebar.header("Citizen Details")
 
-occupation = st.selectbox("Occupation",
-    ["Farmer","Student","Unemployed","Private Job",
-     "Government Employee","Fisherman","Salt Pan Worker"])
+age = st.sidebar.slider("Age", 18, 80)
+income = st.sidebar.number_input("Annual Income (₹)", min_value=0)
 
-gender = st.selectbox("Gender", ["Male","Female","Other"])
-land = st.selectbox("Own Agricultural Land?", ["Yes","No"])
-category = st.selectbox("Category", ["General","OBC","SC","ST"])
-district = st.text_input("District")
+occupation = st.sidebar.selectbox(
+    "Occupation",
+    ["Farmer","Student","Unemployed","Private Job","Government Employee","Fisherman","Salt Pan Worker"]
+)
 
-registration_status = st.selectbox("Registered in Welfare Board?", ["Yes","No"])
-income_verified = st.selectbox("Income Certificate Verified?", ["Yes","No"])
+gender = st.sidebar.selectbox("Gender", ["Male","Female","Other"])
 
-patta_number = st.text_input("Patta Number")
-caste_certificate = st.text_input("Caste Certificate Number")
-family_card_number = st.text_input("Family Card Number")
+land = st.sidebar.selectbox("Own Agricultural Land?", ["Yes","No"])
 
-if st.button("Check Eligibility"):
+category = st.sidebar.selectbox("Category", ["General","OBC","SC","ST"])
+
+district = st.sidebar.selectbox(
+    "District",
+    [
+        "Ariyalur","Chengalpattu","Chennai","Coimbatore","Cuddalore",
+        "Dharmapuri","Dindigul","Erode","Kallakurichi","Kanchipuram",
+        "Kanniyakumari","Karur","Krishnagiri","Madurai","Mayiladuthurai",
+        "Nagapattinam","Namakkal","Nilgiris","Perambalur","Pudukkottai",
+        "Ramanathapuram","Ranipet","Salem","Sivaganga","Tenkasi",
+        "Thanjavur","Theni","Thiruvallur","Thiruvarur","Thoothukudi",
+        "Tiruchirappalli","Tirunelveli","Tirupathur","Tiruppur",
+        "Tiruvannamalai","Vellore","Viluppuram","Virudhunagar"
+    ]
+)
+
+registration_status = st.sidebar.selectbox(
+    "Registered in Welfare Board?",
+    ["Yes","No"]
+)
+
+if st.sidebar.button("Check Eligibility"):
 
     results = find_eligible_schemes(
         age,
@@ -40,13 +52,11 @@ if st.button("Check Eligibility"):
         category,
         gender,
         district,
-        schemes,
         registration_status,
-        income_verified,
-        patta_number,
-        caste_certificate,
-        family_card_number
+        schemes
     )
+
+    st.header("Eligible Schemes")
 
     if results:
         df = pd.DataFrame(results, columns=["Scheme","Category"])
@@ -55,4 +65,4 @@ if st.button("Check Eligibility"):
         st.metric("Total Eligible Schemes", len(df))
         st.bar_chart(df["Category"].value_counts())
     else:
-        st.warning("No eligible schemes found.")
+        st.warning("No schemes eligible.")

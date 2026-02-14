@@ -1,16 +1,19 @@
 import streamlit as st
 
-if st.session_state.role != "Officer":
-    st.warning("Access Denied")
-    st.stop()
-
 st.title("Revenue Officer Dashboard")
 
-st.metric("Total Applications Today", 124)
-st.metric("Approved", 87)
-st.metric("Rejected", 37)
+st.markdown("""
+Officer can:
+- Verify Income Certificate
+- Verify Patta (Land Record)
+- Verify Caste Certificate
+- Verify Family Card
+""")
 
-st.bar_chart({
-    "Approved": 87,
-    "Rejected": 37
-})
+income_verified = st.selectbox("Income Certificate Verified?", ["Yes","No"])
+patta = st.text_input("Patta Number")
+caste = st.text_input("Caste Certificate Number")
+family = st.text_input("Family Card Number")
+
+if st.button("Validate Records"):
+    st.success("Records Validated Successfully")

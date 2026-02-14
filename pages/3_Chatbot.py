@@ -1,26 +1,22 @@
 import streamlit as st
+from utils.helpers import load_schemes
 
-st.title("Scheme Assistant Chatbot")
+st.title("AI Scheme Assistant")
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+schemes = load_schemes()
 
-for message in st.session_state.messages:
-    st.chat_message(message["role"]).write(message["content"])
+question = st.text_input("Ask about schemes...")
 
-prompt = st.chat_input("Ask about schemes...")
+if question:
+    matched = []
 
-if prompt:
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    for scheme in schemes:
+        if question.lower() in scheme["name"].lower():
+            matched.append(scheme["name"])
 
-    if "farmer" in prompt.lower():
-        response = "Farmers may be eligible for PM-KISAN and Irrigation Schemes."
-    elif "women" in prompt.lower():
-        response = "Women may benefit from Free Bus Travel and Magalir schemes."
-    elif "fisherman" in prompt.lower():
-        response = "Fishermen in Thoothukudi may get Lean Period Assistance."
+    if matched:
+        st.write("Matching Schemes:")
+        for m in matched:
+            st.write("•", m)
     else:
-        response = "Please enter occupation and district for accurate assistance."
-
-    st.session_state.messages.append({"role": "assistant", "content": response})
-    st.chat_message("assistant").write(response)
+        st.write("No direct match found.")
