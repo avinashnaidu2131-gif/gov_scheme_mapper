@@ -3,12 +3,10 @@ import re
 from model import find_eligible_schemes
 from utils.helpers import load_schemes
 
-# Page config
 st.set_page_config(page_title="Tamil Nadu Scheme Mapper", layout="centered")
 
 st.title("AI Platform to Map Tamil Nadu Govt Schemes")
 
-# Load scheme dataset
 schemes = load_schemes()
 
 # ===============================
@@ -26,7 +24,12 @@ income = st.number_input(
 
 occupation = st.selectbox(
     "Occupation",
-    ["Farmer", "Student", "Unemployed", "Private Job"]
+    ["Farmer", "Student", "Unemployed", "Private Job", "Government Employee"]
+)
+
+gender = st.selectbox(
+    "Gender",
+    ["Male", "Female", "Other"]
 )
 
 land = st.selectbox(
@@ -42,7 +45,7 @@ category = st.selectbox(
 if st.button("Find Eligible Schemes"):
 
     results = find_eligible_schemes(
-        age, income, occupation, land, category, schemes
+        age, income, occupation, land, category, gender, schemes
     )
 
     st.subheader("Eligible Schemes")
@@ -67,11 +70,9 @@ def extract_details(text):
 
     text = text.lower()
 
-    # Age extraction
     age_match = re.search(r'(\d{1,2})\s*year', text)
     age = int(age_match.group(1)) if age_match else 30
 
-    # Income extraction
     income_match = re.search(r'(\d+)\s*lakh', text)
     if income_match:
         income = int(income_match.group(1)) * 100000
@@ -79,17 +80,24 @@ def extract_details(text):
         income_number = re.search(r'(\d{5,7})', text)
         income = int(income_number.group(1)) if income_number else 200000
 
-    # Occupation detection
     if "farmer" in text:
         occupation = "Farmer"
     elif "student" in text:
         occupation = "Student"
     elif "unemployed" in text:
         occupation = "Unemployed"
+    elif "government" in text:
+        occupation = "Government Employee"
     else:
         occupation = "Private Job"
 
-    # Land detection
+    if "female" in text or "woman" in text:
+        gender = "Female"
+    elif "male" in text:
+        gender = "Male"
+    else:
+        gender = "Other"
+
     if "no land" in text:
         land = "No"
     elif "land" in text:
@@ -97,7 +105,6 @@ def extract_details(text):
     else:
         land = "No"
 
-    # Category detection
     if "sc" in text:
         category = "SC"
     elif "st" in text:
@@ -107,22 +114,15 @@ def extract_details(text):
     else:
         category = "General"
 
-    return age, income, occupation, land, category
+    return age, income, occupation, land, category, gender
 
 
 if st.button("Ask Chatbot"):
 
-    age, income, occupation, land, category = extract_details(user_input)
-
-    st.write("Detected Details:")
-    st.write(f"Age: {age}")
-    st.write(f"Income: ₹{income}")
-    st.write(f"Occupation: {occupation}")
-    st.write(f"Land: {land}")
-    st.write(f"Category: {category}")
+    age, income, occupation, land, category, gender = extract_details(user_input)
 
     results = find_eligible_schemes(
-        age, income, occupation, land, category, schemes
+        age, income, occupation, land, category, gender, schemes
     )
 
     st.subheader("Eligible Schemes")

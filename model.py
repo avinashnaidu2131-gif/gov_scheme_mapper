@@ -1,4 +1,4 @@
-def find_eligible_schemes(age, income, occupation, land, category, schemes):
+def find_eligible_schemes(age, income, occupation, land, category, gender, schemes):
 
     eligible_schemes = []
 
@@ -11,6 +11,9 @@ def find_eligible_schemes(age, income, occupation, land, category, schemes):
 
         if scheme["occupation"] == occupation:
             score += 1
+
+        if scheme.get("gender") and scheme["gender"] != gender:
+            continue
 
         if scheme["land_required"] and land == "Yes":
             score += 1

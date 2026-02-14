@@ -174,4 +174,25 @@
     "land_required": false,
     "priority_category": ["General","OBC","SC","ST"]
   }
+  {
+  "name": "Tamil Nadu Government Employee Medical Insurance",
+  "income_limit": 1000000,
+  "occupation": "Government Employee",
+  "land_required": false,
+  "priority_category": ["General","OBC","SC","ST"]
+},
+{
+  "name": "Government Employee Housing Advance Scheme",
+  "income_limit": 1200000,
+  "occupation": "Government Employee",
+  "land_required": false,
+  "priority_category": ["General","OBC","SC","ST"]
+},
+{
+  "name": "Government Employee Pension Benefit Scheme",
+  "income_limit": 1500000,
+  "occupation": "Government Employee",
+  "land_required": false,
+  "priority_category": ["General","OBC","SC","ST"]
+}
 ]
