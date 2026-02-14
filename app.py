@@ -4,16 +4,18 @@ from urllib.parse import urlencode
 
 st.set_page_config(page_title="TN Revenue Portal", layout="wide")
 
-CLIENT_ID = st.secrets.get("GOOGLE_CLIENT_ID", "")
-CLIENT_SECRET = st.secrets.get("GOOGLE_CLIENT_SECRET", "")
-
-REDIRECT_URI = "https://govschememapper-dc9c39ssqouued9awzjhtb.streamlit.app/"
+# ================= CONFIG =================
+CLIENT_ID = st.secrets["GOOGLE_CLIENT_ID"]
+CLIENT_SECRET = st.secrets["GOOGLE_CLIENT_SECRET"]
 
 AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 USER_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
 
-# ---------------- SESSION ----------------
+# Automatically detect current app URL
+REDIRECT_URI = st.request.url.split("?")[0]
+
+# ================= SESSION =================
 if "user" not in st.session_state:
     st.session_state.user = None
 
@@ -26,13 +28,13 @@ if not st.session_state.user:
 
     st.title("🔐 Tamil Nadu Revenue Department Portal")
 
-    login_option = st.radio(
-        "Select Login Method",
+    login_type = st.radio(
+        "Choose Login Method",
         ["Google Login", "Manual Login"]
     )
 
-    # ---------------- GOOGLE LOGIN ----------------
-    if login_option == "Google Login":
+    # -------- GOOGLE LOGIN --------
+    if login_type == "Google Login":
 
         params = {
             "client_id": CLIENT_ID,
@@ -43,12 +45,14 @@ if not st.session_state.user:
             "prompt": "select_account",
         }
 
-        auth_url = f"{AUTH_URL}?{urlencode(params)}"
-        st.markdown(f"[🔑 Login with Google]({auth_url})")
+        google_auth_url = f"{AUTH_URL}?{urlencode(params)}"
+
+        st.markdown(f"[🔑 Login with Google]({google_auth_url})")
 
         query_params = st.query_params
 
         if "code" in query_params:
+
             code = query_params["code"]
 
             token_data = {
@@ -77,8 +81,9 @@ if not st.session_state.user:
 
             st.rerun()
 
-    # ---------------- MANUAL LOGIN ----------------
+    # -------- MANUAL LOGIN --------
     else:
+
         username = st.text_input("Username")
         password = st.text_input("Password", type="password")
 
@@ -101,7 +106,7 @@ if not st.session_state.user:
 
 
 # ================= AFTER LOGIN =================
-st.success(f"Logged in as {st.session_state.user['email']}")
+st.success(f"Logged in as: {st.session_state.user['email']}")
 st.sidebar.success(f"Role: {st.session_state.role}")
 
 if st.sidebar.button("Logout"):
