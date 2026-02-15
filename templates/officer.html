@@ -1,0 +1,11 @@
+<h2>Officer Dashboard</h2>
+
+{% for app in applications %}
+<p>
+{{ app.user_email }} applied for {{ app.scheme_name }} 
+Status: {{ app.status }}
+<a href="/approve/{{ app.id }}">Approve</a>
+</p>
+{% endfor %}
+
+<a href="/logout">Logout</a>

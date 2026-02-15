@@ -1,83 +1,93 @@
-import streamlit as st
-import requests
-from urllib.parse import urlencode
+from flask import Flask, render_template, redirect, url_for, session, request
+from authlib.integrations.flask_client import OAuth
+from models import db, User, Application
+from config import Config
+import json, os
 
-st.set_page_config(page_title="TN Revenue Portal", layout="wide")
+app = Flask(__name__)
+app.config.from_object(Config)
 
-# ===== LOAD SECRETS =====
-CLIENT_ID = st.secrets["GOOGLE_CLIENT_ID"]
-CLIENT_SECRET = st.secrets["GOOGLE_CLIENT_SECRET"]
+db.init_app(app)
 
-# ===== STATIC REDIRECT (MATCH GOOGLE CONSOLE EXACTLY) =====
-REDIRECT_URI = "https://govschememapper-kdtfcxuor89mkd3fy8hrdc.streamlit.app/"
+oauth = OAuth(app)
 
-AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
-TOKEN_URL = "https://oauth2.googleapis.com/token"
-USER_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
+google = oauth.register(
+    name='google',
+    client_id=os.environ.get("GOOGLE_CLIENT_ID"),
+    client_secret=os.environ.get("GOOGLE_CLIENT_SECRET"),
+    access_token_url='https://oauth2.googleapis.com/token',
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    client_kwargs={'scope': 'openid email profile'}
+)
 
-if "user" not in st.session_state:
-    st.session_state.user = None
+@app.before_first_request
+def create_tables():
+    db.create_all()
 
-if "role" not in st.session_state:
-    st.session_state.role = None
+@app.route("/")
+def home():
+    if "user" in session:
+        return redirect("/dashboard")
+    return render_template("login.html")
 
+@app.route("/login")
+def login():
+    redirect_uri = url_for("authorize", _external=True)
+    return google.authorize_redirect(redirect_uri)
 
-# ================= LOGIN =================
-if not st.session_state.user:
+@app.route("/authorize")
+def authorize():
+    token = google.authorize_access_token()
+    user_info = google.parse_id_token(token)
+    email = user_info["email"]
 
-    st.title("🔐 Tamil Nadu Revenue Department Portal")
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        user = User(email=email, role="citizen")
+        db.session.add(user)
+        db.session.commit()
 
-    params = {
-        "client_id": CLIENT_ID,
-        "redirect_uri": REDIRECT_URI,
-        "response_type": "code",
-        "scope": "openid email profile",
-        "access_type": "offline",
-        "prompt": "select_account",
-    }
+    session["user"] = email
+    return redirect("/dashboard")
 
-    auth_url = f"{AUTH_URL}?{urlencode(params)}"
-    st.markdown(f"[🔑 Login with Google]({auth_url})")
+@app.route("/dashboard")
+def dashboard():
+    if "user" not in session:
+        return redirect("/")
 
-    query_params = st.query_params
+    user = User.query.filter_by(email=session["user"]).first()
 
-    if "code" in query_params:
-        code = query_params["code"]
+    if user.role == "officer":
+        applications = Application.query.all()
+        return render_template("officer.html", applications=applications)
 
-        token_data = {
-            "code": code,
-            "client_id": CLIENT_ID,
-            "client_secret": CLIENT_SECRET,
-            "redirect_uri": REDIRECT_URI,
-            "grant_type": "authorization_code",
-        }
+    return render_template("citizen.html")
 
-        token_response = requests.post(TOKEN_URL, data=token_data)
-        token_json = token_response.json()
+@app.route("/apply/<scheme>")
+def apply(scheme):
+    if "user" not in session:
+        return redirect("/")
 
-        access_token = token_json.get("access_token")
+    new_app = Application(
+        user_email=session["user"],
+        scheme_name=scheme
+    )
+    db.session.add(new_app)
+    db.session.commit()
 
-        headers = {"Authorization": f"Bearer {access_token}"}
-        user_info = requests.get(USER_INFO_URL, headers=headers).json()
+    return "Application Submitted!"
 
-        st.session_state.user = user_info
+@app.route("/approve/<int:id>")
+def approve(id):
+    app_obj = Application.query.get(id)
+    app_obj.status = "Approved"
+    db.session.commit()
+    return redirect("/dashboard")
 
-        if user_info["email"].endswith("@tn.gov.in"):
-            st.session_state.role = "Officer"
-        else:
-            st.session_state.role = "Citizen"
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
 
-        st.rerun()
-
-    st.stop()
-
-
-# ================= AFTER LOGIN =================
-st.success(f"Logged in as {st.session_state.user['email']}")
-st.sidebar.success(f"Role: {st.session_state.role}")
-
-if st.sidebar.button("Logout"):
-    st.session_state.clear()
-    st.rerun()
-
-st.title("Tamil Nadu Government Scheme Mapper")
+if __name__ == "__main__":
+    app.run(debug=True)
