@@ -1,6 +1,5 @@
 flask
-flask_sqlalchemy
-psycopg2-binary
-authlib
 gunicorn
+authlib
 requests
+python-dotenv
