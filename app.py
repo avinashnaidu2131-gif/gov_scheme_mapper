@@ -1,9 +1,13 @@
 from flask import Flask, redirect, url_for, session, render_template
 from flask_sqlalchemy import SQLAlchemy
 from authlib.integrations.flask_client import OAuth
+from werkzeug.middleware.proxy_fix import ProxyFix
 import os
 
 app = Flask(__name__)
+
+# 🔥 IMPORTANT: Fix HTTPS behind Railway proxy
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 # ================= SECRET KEY =================
 app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
@@ -53,6 +57,7 @@ def home():
 
 @app.route("/login")
 def login():
+    # 🔥 This must match Google Console redirect URI
     redirect_uri = url_for("authorize", _external=True)
     return google.authorize_redirect(redirect_uri)
 
