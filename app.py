@@ -7,11 +7,13 @@ import json
 
 app = Flask(__name__)
 
-# Fix HTTPS behind Railway proxy
+# 🔥 Fix HTTPS behind Railway proxy
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
+# ================= SECRET KEY =================
 app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 
+# ================= DATABASE CONFIG =================
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -29,6 +31,7 @@ class Application(db.Model):
     scheme_name = db.Column(db.String(200))
     status = db.Column(db.String(50), default="Pending")
 
+# Create tables
 with app.app_context():
     db.create_all()
 
@@ -51,10 +54,12 @@ def home():
         return redirect(url_for("dashboard"))
     return render_template("login.html")
 
+
 @app.route("/login")
 def login():
     redirect_uri = url_for("authorize", _external=True)
     return google.authorize_redirect(redirect_uri)
+
 
 @app.route("/authorize")
 def authorize():
@@ -64,14 +69,18 @@ def authorize():
 
     email = user_info.get("email")
 
+    if not email:
+        return "Error fetching email from Google"
+
     user = User.query.filter_by(email=email).first()
     if not user:
-        user = User(email=email)
+        user = User(email=email, role="citizen")
         db.session.add(user)
         db.session.commit()
 
     session["user"] = email
     return redirect(url_for("dashboard"))
+
 
 @app.route("/dashboard")
 def dashboard():
@@ -80,7 +89,7 @@ def dashboard():
 
     user = User.query.filter_by(email=session["user"]).first()
 
-    # Load schemes from JSON
+    # 🔥 Load schemes dynamically from JSON
     with open("data/schemes.json", "r") as f:
         schemes = json.load(f)
 
@@ -88,7 +97,8 @@ def dashboard():
         applications = Application.query.all()
         return render_template("officer.html", applications=applications)
 
-    return render_template("citizen.html", schemes=schemes)
+    return render_template("dashboard.html", schemes=schemes)
+
 
 @app.route("/apply/<scheme>")
 def apply(scheme):
@@ -104,17 +114,21 @@ def apply(scheme):
 
     return redirect(url_for("dashboard"))
 
+
 @app.route("/approve/<int:id>")
 def approve(id):
     application = Application.query.get(id)
-    application.status = "Approved"
-    db.session.commit()
+    if application:
+        application.status = "Approved"
+        db.session.commit()
     return redirect(url_for("dashboard"))
+
 
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("home"))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
