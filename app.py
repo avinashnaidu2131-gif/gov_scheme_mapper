@@ -6,13 +6,13 @@ import os
 
 app = Flask(__name__)
 
-# 🔥 IMPORTANT: Fix HTTPS behind Railway proxy
+# 🔥 Fix HTTPS behind Railway proxy
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 # ================= SECRET KEY =================
 app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 
-# ================= DATABASE CONFIG (SQLite) =================
+# ================= DATABASE CONFIG =================
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -46,6 +46,7 @@ google = oauth.register(
         "scope": "openid email profile"
     }
 )
+
 # ================= ROUTES =================
 
 @app.route("/")
@@ -57,26 +58,36 @@ def home():
 
 @app.route("/login")
 def login():
-    # 🔥 This must match Google Console redirect URI
     redirect_uri = url_for("authorize", _external=True)
     return google.authorize_redirect(redirect_uri)
 
 
 @app.route("/authorize")
 def authorize():
-    token = google.authorize_access_token()
-    user_info = google.parse_id_token(token)
+    try:
+        # Exchange authorization code for token
+        token = google.authorize_access_token()
 
-    email = user_info["email"]
+        # 🔥 Safely fetch user info from Google
+        resp = google.get("https://openidconnect.googleapis.com/v1/userinfo")
+        user_info = resp.json()
 
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        user = User(email=email, role="citizen")
-        db.session.add(user)
-        db.session.commit()
+        email = user_info.get("email")
 
-    session["user"] = email
-    return redirect(url_for("dashboard"))
+        if not email:
+            return "Error: Unable to fetch email from Google"
+
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            user = User(email=email, role="citizen")
+            db.session.add(user)
+            db.session.commit()
+
+        session["user"] = email
+        return redirect(url_for("dashboard"))
+
+    except Exception as e:
+        return f"Login Error: {str(e)}"
 
 
 @app.route("/dashboard")
