@@ -1,3 +1,22 @@
 <h2>Citizen Dashboard</h2>
-<a href="/apply/PM-KISAN">Apply PM-KISAN</a>
-<br><a href="/logout">Logout</a>
+
+{% for scheme in schemes %}
+<div style="border:1px solid black; padding:10px; margin:10px;">
+    <h3>{{ scheme.name }}</h3>
+
+    <p><strong>Category:</strong> {{ scheme.scheme_category }}</p>
+    <p><strong>Occupation:</strong> {{ scheme.occupation }}</p>
+    <p><strong>Income Limit:</strong> ₹{{ scheme.income_limit }}</p>
+
+    {% if scheme.districts == "All" %}
+        <p><strong>Districts:</strong> All</p>
+    {% else %}
+        <p><strong>Districts:</strong> {{ scheme.districts }}</p>
+    {% endif %}
+
+    <a href="/apply/{{ scheme.name }}">Apply</a>
+</div>
+{% endfor %}
+
+<br>
+<a href="/logout">Logout</a>

@@ -1,11 +1,16 @@
 <h2>Officer Dashboard</h2>
 
 {% for app in applications %}
-<p>
-{{ app.user_email }} applied for {{ app.scheme_name }} 
-Status: {{ app.status }}
-<a href="/approve/{{ app.id }}">Approve</a>
-</p>
+<div style="border:1px solid black; padding:10px; margin:10px;">
+    <p><strong>Email:</strong> {{ app.user_email }}</p>
+    <p><strong>Scheme:</strong> {{ app.scheme_name }}</p>
+    <p><strong>Status:</strong> {{ app.status }}</p>
+
+    {% if app.status != "Approved" %}
+        <a href="/approve/{{ app.id }}">Approve</a>
+    {% endif %}
+</div>
 {% endfor %}
 
+<br>
 <a href="/logout">Logout</a>

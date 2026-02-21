@@ -1,10 +1,27 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Dashboard</title>
-</head>
-<body>
-    <h2>Welcome {{ user.email }}</h2>
-    <a href="/logout">Logout</a>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Welcome {{ session.get("user") }}</h2>
+
+{% for scheme in schemes %}
+<div class="card">
+    <h3>{{ scheme.name }}</h3>
+
+    <p><strong>Category:</strong> {{ scheme.scheme_category }}</p>
+    <p><strong>Occupation:</strong> {{ scheme.occupation }}</p>
+    <p><strong>Income Limit:</strong> ₹{{ scheme.income_limit }}</p>
+
+    {% if scheme.districts == "All" %}
+        <p><strong>Districts:</strong> All</p>
+    {% else %}
+        <p><strong>Districts:</strong> {{ scheme.districts }}</p>
+    {% endif %}
+
+    <a href="{{ url_for('apply', scheme=scheme.name) }}" class="btn">
+        Apply Now
+    </a>
+</div>
+{% endfor %}
+
+{% endblock %}
