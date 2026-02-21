@@ -4,24 +4,40 @@
 
 <h2>Welcome {{ session.get("user") }}</h2>
 
-{% for scheme in schemes %}
-<div class="card">
-    <h3>{{ scheme.name }}</h3>
+{% if schemes %}
+    {% for scheme in schemes %}
+        <div class="card">
 
-    <p><strong>Category:</strong> {{ scheme.scheme_category }}</p>
-    <p><strong>Occupation:</strong> {{ scheme.occupation }}</p>
-    <p><strong>Income Limit:</strong> ₹{{ scheme.income_limit }}</p>
+            <h3>{{ scheme.get("name", "Scheme Name") }}</h3>
 
-    {% if scheme.districts == "All" %}
-        <p><strong>Districts:</strong> All</p>
-    {% else %}
-        <p><strong>Districts:</strong> {{ scheme.districts }}</p>
-    {% endif %}
+            <p>
+                <strong>Category:</strong>
+                {{ scheme.get("scheme_category", "Not Specified") }}
+            </p>
 
-    <a href="{{ url_for('apply', scheme=scheme.name) }}" class="btn">
-        Apply Now
-    </a>
-</div>
-{% endfor %}
+            <p>
+                <strong>Occupation:</strong>
+                {{ scheme.get("occupation", "Any") }}
+            </p>
+
+            <p>
+                <strong>Income Limit:</strong>
+                ₹{{ scheme.get("income_limit", "N/A") }}
+            </p>
+
+            <p>
+                <strong>Districts:</strong>
+                {{ scheme.get("districts", "All") }}
+            </p>
+
+            <a href="{{ url_for('apply', scheme=scheme.get('name')) }}" class="btn">
+                Apply Now
+            </a>
+
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No schemes available.</p>
+{% endif %}
 
 {% endblock %}

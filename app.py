@@ -7,13 +7,13 @@ import json
 
 app = Flask(__name__)
 
-# 🔥 Fix HTTPS behind Railway proxy
+# Fix HTTPS behind Railway proxy
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
-# ================= SECRET KEY =================
+# Secret key
 app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 
-# ================= DATABASE CONFIG =================
+# Database config
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -74,7 +74,7 @@ def authorize():
 
     user = User.query.filter_by(email=email).first()
     if not user:
-        user = User(email=email, role="citizen")
+        user = User(email=email)
         db.session.add(user)
         db.session.commit()
 
@@ -82,22 +82,37 @@ def authorize():
     return redirect(url_for("dashboard"))
 
 
+# ================= FIXED DASHBOARD FUNCTION =================
 @app.route("/dashboard")
 def dashboard():
-    if "user" not in session:
-        return redirect(url_for("home"))
+    try:
+        if "user" not in session:
+            return redirect(url_for("home"))
 
-    user = User.query.filter_by(email=session["user"]).first()
+        user = User.query.filter_by(email=session["user"]).first()
 
-    # 🔥 Load schemes dynamically from JSON
-    with open("data/schemes.json", "r") as f:
-        schemes = json.load(f)
+        if not user:
+            return redirect(url_for("home"))
 
-    if user.role == "officer":
-        applications = Application.query.all()
-        return render_template("officer.html", applications=applications)
+        # Safe path for Railway
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        schemes_path = os.path.join(basedir, "data", "schemes.json")
 
-    return render_template("dashboard.html", schemes=schemes)
+        schemes = []
+        if os.path.exists(schemes_path):
+            with open(schemes_path, "r") as f:
+                schemes = json.load(f)
+
+        # Officer dashboard
+        if user.role == "officer":
+            applications = Application.query.all()
+            return render_template("officer.html", applications=applications)
+
+        # Citizen dashboard
+        return render_template("dashboard.html", schemes=schemes)
+
+    except Exception as e:
+        return f"Dashboard Error: {str(e)}"
 
 
 @app.route("/apply/<scheme>")
