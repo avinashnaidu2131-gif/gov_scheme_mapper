@@ -2,42 +2,66 @@
 
 {% block content %}
 
-<h2>Welcome {{ session.get("user") }}</h2>
+<div style="display:flex; gap:30px; align-items:flex-start;">
 
-{% if schemes %}
-    {% for scheme in schemes %}
-        <div class="card">
+    <!-- LEFT SIDE: ELIGIBILITY PANEL -->
+    <div style="width:30%; background:#ffffff; padding:20px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.1);">
 
-            <h3>{{ scheme.get("name", "Scheme Name") }}</h3>
+        <h3>Check Eligibility</h3>
 
-            <p>
-                <strong>Category:</strong>
-                {{ scheme.get("scheme_category", "Not Specified") }}
-            </p>
+        <form method="POST" action="{{ url_for('check_eligibility') }}">
 
-            <p>
-                <strong>Occupation:</strong>
-                {{ scheme.get("occupation", "Any") }}
-            </p>
+            <label>Annual Income</label><br>
+            <input type="number" name="income" required style="width:100%; margin-bottom:10px;"><br>
 
-            <p>
-                <strong>Income Limit:</strong>
-                ₹{{ scheme.get("income_limit", "N/A") }}
-            </p>
+            <label>Occupation</label><br>
+            <input type="text" name="occupation" style="width:100%; margin-bottom:10px;"><br>
 
-            <p>
-                <strong>Districts:</strong>
-                {{ scheme.get("districts", "All") }}
-            </p>
+            <label>Gender</label><br>
+            <select name="gender" style="width:100%; margin-bottom:10px;">
+                <option value="">Any</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select><br>
 
-            <a href="{{ url_for('apply', scheme=scheme.get('name')) }}" class="btn">
-                Apply Now
-            </a>
+            <label>Own Agricultural Land?</label><br>
+            <select name="land" style="width:100%; margin-bottom:10px;">
+                <option value="">Any</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select><br>
 
-        </div>
-    {% endfor %}
-{% else %}
-    <p>No schemes available.</p>
-{% endif %}
+            <label>District</label><br>
+            <input type="text" name="district" style="width:100%; margin-bottom:15px;"><br>
+
+            <button type="submit" class="btn">Check Eligibility</button>
+
+        </form>
+
+    </div>
+
+    <!-- RIGHT SIDE: RESULTS -->
+    <div style="width:70%;">
+
+        <h2>Eligible Schemes</h2>
+
+        {% if schemes %}
+            {% for scheme in schemes %}
+                <div class="card">
+                    <h3>{{ scheme.get("name") }}</h3>
+                    <p><strong>Category:</strong> {{ scheme.get("scheme_category") }}</p>
+                    <p><strong>Income Limit:</strong> ₹{{ scheme.get("income_limit") }}</p>
+                    <a href="{{ url_for('apply', scheme=scheme.get('name')) }}" class="btn">
+                        Apply
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No schemes available.</p>
+        {% endif %}
+
+    </div>
+
+</div>
 
 {% endblock %}
