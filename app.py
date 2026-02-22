@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, session, render_template
+from flask import Flask, redirect, url_for, session, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from authlib.integrations.flask_client import OAuth
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -10,10 +10,8 @@ app = Flask(__name__)
 # Fix HTTPS behind Railway proxy
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
-# Secret key
 app.secret_key = os.environ.get("SECRET_KEY", "supersecretkey")
 
-# Database config
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -82,39 +80,91 @@ def authorize():
     return redirect(url_for("dashboard"))
 
 
-# ================= FIXED DASHBOARD FUNCTION =================
+# ================= DASHBOARD =================
 @app.route("/dashboard")
 def dashboard():
-    try:
-        if "user" not in session:
-            return redirect(url_for("home"))
+    if "user" not in session:
+        return redirect(url_for("home"))
 
-        user = User.query.filter_by(email=session["user"]).first()
+    user = User.query.filter_by(email=session["user"]).first()
 
-        if not user:
-            return redirect(url_for("home"))
+    # Load schemes safely
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    schemes_path = os.path.join(basedir, "data", "schemes.json")
 
-        # Safe path for Railway
-        basedir = os.path.abspath(os.path.dirname(__file__))
-        schemes_path = os.path.join(basedir, "data", "schemes.json")
+    schemes = []
+    if os.path.exists(schemes_path):
+        with open(schemes_path, "r") as f:
+            schemes = json.load(f)
 
-        schemes = []
-        if os.path.exists(schemes_path):
-            with open(schemes_path, "r") as f:
-                schemes = json.load(f)
+    if user.role == "officer":
+        applications = Application.query.all()
+        return render_template("officer.html", applications=applications)
 
-        # Officer dashboard
-        if user.role == "officer":
-            applications = Application.query.all()
-            return render_template("officer.html", applications=applications)
-
-        # Citizen dashboard
-        return render_template("dashboard.html", schemes=schemes)
-
-    except Exception as e:
-        return f"Dashboard Error: {str(e)}"
+    return render_template("dashboard.html", schemes=schemes)
 
 
+# ================= ELIGIBILITY CHECK =================
+@app.route("/check", methods=["POST"])
+def check_eligibility():
+    if "user" not in session:
+        return redirect(url_for("home"))
+
+    income = int(request.form.get("income", 0))
+    occupation = request.form.get("occupation", "").strip()
+    gender = request.form.get("gender")
+    land = request.form.get("land")
+    district = request.form.get("district", "").strip()
+
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    schemes_path = os.path.join(basedir, "data", "schemes.json")
+
+    with open(schemes_path, "r") as f:
+        all_schemes = json.load(f)
+
+    eligible = []
+
+    for scheme in all_schemes:
+
+        # Income check
+        if income > scheme.get("income_limit", 999999):
+            continue
+
+        # Occupation check
+        scheme_occ = scheme.get("occupation")
+        if scheme_occ and occupation:
+            if isinstance(scheme_occ, list):
+                if occupation not in scheme_occ:
+                    continue
+            elif scheme_occ != "Any" and scheme_occ != occupation:
+                continue
+
+        # Gender check
+        if scheme.get("gender_required"):
+            if scheme["gender_required"] != gender:
+                continue
+
+        # Land check
+        if land:
+            land_bool = land == "true"
+            if scheme.get("land_required", False) != land_bool:
+                continue
+
+        # District check
+        scheme_district = scheme.get("districts")
+        if scheme_district != "All" and district:
+            if isinstance(scheme_district, list):
+                if district not in scheme_district:
+                    continue
+            elif scheme_district != district:
+                continue
+
+        eligible.append(scheme)
+
+    return render_template("dashboard.html", schemes=eligible)
+
+
+# ================= APPLY =================
 @app.route("/apply/<scheme>")
 def apply(scheme):
     if "user" not in session:
@@ -130,6 +180,7 @@ def apply(scheme):
     return redirect(url_for("dashboard"))
 
 
+# ================= APPROVE =================
 @app.route("/approve/<int:id>")
 def approve(id):
     application = Application.query.get(id)
@@ -139,6 +190,7 @@ def approve(id):
     return redirect(url_for("dashboard"))
 
 
+# ================= LOGOUT =================
 @app.route("/logout")
 def logout():
     session.clear()
